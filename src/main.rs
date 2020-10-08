@@ -43,15 +43,18 @@ fn parse_counted<'a>(input_file: &'a str) -> Vec<(&'a str, u64)> {
         let mut iter = line.split(&['[', ',', '"', ']'][..]).skip(1);
         let count = iter.next().unwrap().parse().unwrap();
         let word = iter.skip(1).next().unwrap();
-        if !word.contains(&[',', '\'', '!', '?', ')', '('][..])
-            && word.len() > 1
-            && !word.starts_with("said")
-            && !word.chars().all(|c| c.is_digit(10))
-        {
+        if filter_word(word) {
             map.push((word, count));
         }
     }
     map
+}
+
+fn filter_word(word: &str) -> bool {
+    !word.contains(&[',', '\'', '!', '?', ')', '('][..])
+        && word.len() > 1
+        && !word.starts_with("said")
+        && !word.chars().all(|c| c.is_digit(10))
 }
 
 fn parse_freq<'a>(input_file: &'a str) -> HashMap<&'a str, u64> {
